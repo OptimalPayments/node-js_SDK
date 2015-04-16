@@ -1,0 +1,30 @@
+{
+  "name": "NodeNetBanxSDK",
+  "version": "2.0.0",
+  "description": "Nodejs SDK for Netbanx/Optimal Payments",
+  "main": "./lib/OptimalApiClient.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "contributors": [
+                   { "name": "Anup Warke", "email": "anup.w@opussoft.com" },
+                   { "name": "Atul Patil", "email": "atul.patil@opussoft.com" }
+                 ],
+  "repository": "",
+  "dependencies": {
+    "request": "^2.53.0"
+  },
+  "devDependencies": {
+  	"nodeunit": "^0.9.0",
+  	"express": "4.12.3"
+  },
+  "keywords": [
+    "NodeNetBanxSDK",
+    "node.js",
+    "eclipse",
+    "nodeclipse"
+  ],
+  "author": "Opus sofwares Pvt. Ltd.",
+  "license": "",
+  "readmeFilename": "README.md"
+}
