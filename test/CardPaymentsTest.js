@@ -2,7 +2,7 @@
  * author: Anup W.
  */
 var optimalApiClient = require("../lib/OptimalApiClient");
-var config = require("../sample/config");
+var config = require("../sample_application/config");
 
 var merchantRefNumber = Math.random().toString(36).slice(2);
 var merchantCustNumber = Math.random().toString(36).slice(2);
@@ -160,12 +160,12 @@ function getASettlement(id) {
 }
 // settle an authorization
 function settleAnAuthorization(id) {
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setId(id);
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setId(id);
 	var settle = new optimalApiClient.Settlements();
 	settle.setMerchantRefNum(merchantRefNumber);
 	settle.setAmount("40");
-	settle.setAuthorization(authrization);
+	settle.setAuthorization(authorization);
 	settle.setDupCheck("false");
 	optimalApiClient.cardServiceHandler(optimalApiClient).settlement(settle,
 			function(error, responseDel) {
@@ -204,7 +204,7 @@ function getRevAuthUsingMerchantRefNumber(merchantref) {
 }
 // get reverse authorization using revAuth id;
 function getReverseAuthUsingId(id) {
-	var revAuth = new optimalApiClient.Authorizationreversal();
+	var revAuth = new optimalApiClient.AuthorizationReversal();
 	revAuth.setId(id);
 	revAuth.setMerchantRefNum(merchantRefNumber);
 	optimalApiClient.cardServiceHandler(optimalApiClient).getAuthReversal(revAuth,
@@ -214,6 +214,7 @@ function getReverseAuthUsingId(id) {
 					console.log("Error: " + responseDel.error.message);
 				} else {
 					console.log("Status: " + responseDel.getLinks()[0].getHref());
+                    console.log("Response at the client: " + JSON.stringify(responseDel));
 					// console.log("Status: " + responseDel.getAuths().length);
 					// console.log("Status: " +
 					// responseDel.getAuths()[0].getLinks()[0].getRel());
@@ -223,12 +224,12 @@ function getReverseAuthUsingId(id) {
 // create or perform reverse authorization
 function reverseAuth() {
 	var revAuth = new optimalApiClient.AuthorizationReversal();
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setId("0372af4a-6c09-42c3-9122-037734ad4046");
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setId("0372af4a-6c09-42c3-9122-037734ad4046");
 	revAuth.setMerchantRefNum(merchantRefNumber);
 	revAuth.setAmount("1000");
 	// revAuth.setDupCheck("false");
-	revAuth.setAuthorization(authrization);
+	revAuth.setAuthorization(authorization);
 	optimalApiClient.cardServiceHandler(optimalApiClient).reverseAuth(revAuth,
 			function(error, responseDel) {
 				console.log("Response at the cl ient: " + responseDel);
@@ -236,7 +237,8 @@ function reverseAuth() {
 					console.log("Error: " + responseDel.error.message);
 				} else {
 					console.log("Status: " + responseDel.getLinks()[0].getHref());
-					// console.log("Status: " + responseDel.getAuths().length);
+					console.log("Response at the client: " + JSON.stringify(responseDel));
+                    // console.log("Status: " + responseDel.getAuths().length);
 					// console.log("Status: " +
 					// responseDel.getAuths()[0].getLinks()[0].getRel());
 				}
@@ -248,28 +250,30 @@ function reverseAuth() {
 // get authorization using merchantRef number
 function getAuthUsingMerchantRefNumber(id) {
 	var pagination = new optimalApiClient.Pagination();
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setMerchantRefNum(id);
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setMerchantRefNum(id);
 	optimalApiClient.cardServiceHandler(optimalApiClient).searchByMerchantRef(
-			authrization,
+			authorization,
 			pagination,
 			function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.error.message);
 				} else {
-					console.log("Status: " + responseDel.getLinks()[0].getHref());
-					console.log("Status: " + responseDel.getAuths().length);
-					console.log("Status: " + responseDel.getAuths()[0].getId());
+					console.log("Executed URL: " + responseDel.getLinks()[0].getHref());
+					console.log("Autorizaion list results: " + responseDel.getAuths().length);
+					if(responseDel.getAuths().length > 0) {
+                        console.log("Status: " + responseDel.getAuths()[0].getId());
+                    }
 				}
 			});
 }
 //Cancel an authorization using auth id
 function aproveAuthUsingAuthId(id) {
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setId(id);
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setId(id);
 	optimalApiClient.cardServiceHandler(optimalApiClient).approveHeldAuth(
-			authrization, function(error, responseDel) {
+			authorization, function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.error.message);
@@ -280,36 +284,38 @@ function aproveAuthUsingAuthId(id) {
 }
 // Cancel an authorization using auth id
 function cancelAuthUsingAuthId(id) {
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setId(id);
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setId(id);
 	optimalApiClient.cardServiceHandler(optimalApiClient).cancelHeldAuth(
-			authrization, function(error, responseDel) {
+			authorization, function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.error.message);
 				} else {
 					console.log("Status: " + responseDel.getLinks()[0].getHref());
+                    console.log("Response at the client: " + JSON.stringify(responseDel));
 				}
 			});
 }
 // Get authorization using auth id
 function getAuthUsingAuthId(id) {
-	var authrization = new optimalApiClient.Authorization();
-	authrization.setId(id);
-	optimalApiClient.cardServiceHandler(optimalApiClient).getAuth(authrization,
+	var authorization = new optimalApiClient.Authorization();
+	authorization.setId(id);
+	optimalApiClient.cardServiceHandler(optimalApiClient).getAuth(authorization,
 			function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.error.message);
 				} else {
 					console.log("Status: " + responseDel.getLinks()[0].getHref());
+                    console.log("Response at the client: " + JSON.stringify(responseDel));
 				}
 			});
 }
 // Auth with Card
 function authWithCard() {
 	var billingDet = new optimalApiClient.BillingDetails();
-	var authrization = new optimalApiClient.Authorization();
+	var authorization = new optimalApiClient.Authorization();
 	var card = new optimalApiClient.Card();
 	var cardExp = new optimalApiClient.CardExpiry();
 	billingDet.setStreet("Carlos Pellegrini 551");
@@ -321,14 +327,14 @@ function authWithCard() {
 	cardExp.setMonth("09");
 	cardExp.setYear("2019");
 	card.setCardExpiry(cardExp);
-	// authrization.setId("b63371b1-e925-4eb8-b889-7152046592ba");
-	authrization.setMerchantRefNum(merchantRefNumber);
-	authrization.setAmount("100");
-	authrization.setSettleWithAuth("false");
-	authrization.setCard(card);
-	authrization.setBillingDetails(billingDet);
+	// authorization.setId("b63371b1-e925-4eb8-b889-7152046592ba");
+	authorization.setMerchantRefNum(merchantRefNumber);
+	authorization.setAmount("100");
+	authorization.setSettleWithAuth("false");
+	authorization.setCard(card);
+	authorization.setBillingDetails(billingDet);
 	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(
-			authrization, function(error, responseDel) {
+			authorization, function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (error) {
 					console.log("Error: " + error.message);
@@ -341,15 +347,15 @@ function authWithCard() {
 }
 // auth with card payment token
 function authWithPaymentToken() {
-	var authrization = new optimalApiClient.Authorization();
+	var authorization = new optimalApiClient.Authorization();
 	var card = new optimalApiClient.Card();
 	card.setPaymentToken("CdELTQJoyuHg6In");
-	authrization.setMerchantRefNum(merchantRefNumber);
-	authrization.setAmount("1250000");
-	//authrization.setSettleWithAuth("false");
-	authrization.setCard(card);
+	authorization.setMerchantRefNum(merchantRefNumber);
+	authorization.setAmount("1250000");
+	//authorization.setSettleWithAuth("false");
+	authorization.setCard(card);
 	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(
-			authrization, function(error, responseDel) {
+			authorization, function(error, responseDel) {
 				console.log("Response at the client: " + responseDel);
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.error.message);
@@ -361,20 +367,20 @@ function authWithPaymentToken() {
 
 
 function authWithPaymentTokenAndSettlement() {
-/*	var authrization = new optimalApiClient.Authorization();
+/*	var authorization = new optimalApiClient.Authorization();
 	var card = new optimalApiClient.Card();
 	card.setPaymentToken("CQSCjzkm09IPiW1");
-	authrization.setMerchantRefNum(merchantRefNumber);
-	authrization.setAmount("1250000");
+	authorization.setMerchantRefNum(merchantRefNumber);
+	authorization.setAmount("1250000");
 	var billingDet = new optimalApiClient.BillingDetails();
 	billingDet.setStreet("Carlos Pellegrini 551");
 	billingDet.setCity("Buenos Aires");
 	billingDet.setState("Zulia");
 	billingDet.setCountry("IN");  // Use AR to perform Held auth
 	billingDet.setZip("411015");  // use C1009ABK
-	authrization.setBillingDetails(billingDet);*/
-	//authrization.setSettleWithAuth("false");
-	//authrization.setCard(card);
+	authorization.setBillingDetails(billingDet);*/
+	//authorization.setSettleWithAuth("false");
+	//authorization.setCard(card);
 	
 	var billingDet = new optimalApiClient.BillingDetails();
 	var shippingDet = new optimalApiClient.ShippingDetails();
@@ -396,7 +402,7 @@ function authWithPaymentTokenAndSettlement() {
 	cardExp.setMonth("09");
 	cardExp.setYear("2019");
 	card.setCardExpiry(cardExp);
-	//authrization.setId("b63371b1-e925-4eb8-b889-7152046592ba");
+	//authorization.setId("b63371b1-e925-4eb8-b889-7152046592ba");
 	authorization.setMerchantRefNum(merchantRefNumber);
 	authorization.setAmount("1200");
 	authorization.setSettleWithAuth("true");
@@ -422,9 +428,9 @@ function authWithPaymentTokenAndSettlement() {
 								console.log("Error: " + responseDel.getError().getMessage());
 							} else {
 								console.log("Status: " + responseDel.getLinks()[0].getHref());
-								var authrization = new optimalApiClient.Authorization();
-								authrization.setId(id);
-								optimalApiClient.cardServiceHandler(optimalApiClient).getAuth(authrization,
+								var authorization = new optimalApiClient.Authorization();
+								authorization.setId(id);
+								optimalApiClient.cardServiceHandler(optimalApiClient).getAuth(authorization,
 										function(error, responseDel) {
 											console.log("Response at getAuth the client: " + responseDel);
 											if (responseDel.error !== undefined) {
@@ -438,6 +444,17 @@ function authWithPaymentTokenAndSettlement() {
 			});
 }
 
+function monitor(){
+	optimalApiClient.cardServiceHandler(optimalApiClient).monitor(
+			function(error, responseDel) {
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				console.log("Response at the error: " + responseDel.status);
+			});
+}
+
+monitor();
+
+
 //authWithCard();
 //refundASettlement("3e148eb3-a0ed-403e-ba42-24982a953858");
 //cancelASettlement("3e148eb3-a0ed-403e-ba42-24982a953858");
@@ -447,4 +464,8 @@ function authWithPaymentTokenAndSettlement() {
 //authWithPaymentToken();
 //authWithPaymentTokenAndSettlement();
 //getAuthUsingAuthId("22132aa2-ab55-408a-b971-86f130e91f0a");
-getAuthUsingMerchantRefNumber("rzau9v8zofj38fr");
+//reverseAuth();
+//getAuthUsingMerchantRefNumber("rzau9v8zofj38fr");
+//getReverseAuthUsingId("a0f429e9-2712-419e-929c-366798587d4b");
+//cancelAuthUsingAuthId("6e016e51-1cb1-4e41-a63b-16a519d67510");
+//settleAnAuthorization("6e016e51-1cb1-4e41-a63b-16a519d67510");

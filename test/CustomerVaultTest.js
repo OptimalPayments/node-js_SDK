@@ -2,7 +2,7 @@
  * author: Anup W.
  */
 var optimalApiClient = require("../lib/OptimalApiClient");
-var config = require("../sample/config");
+var config = require("../sample_application/config");
 
 var merchantRefNumber = Math.random().toString(36).slice(2);
 var merchantCustNumber = Math.random().toString(36).slice(2);
@@ -102,7 +102,9 @@ function createAddressInAProfile() {
 	optimalApiClient.CustomerServiceHandler(optimalApiClient)
 			.createCustmerAddress(address, function(error, resCreateAdd) {
 				console.log(resCreateAdd);
-				console.log(resCreateAdd.getError().getCode());
+				if(resCreateAdd.getError()){
+                    console.log(resCreateAdd.getError().getCode());
+                }
 				// console.log(resCreateProfile.getPaymentToken());
 				// console.log(resCreateProfile.getError().getMessage());
 				// console.log(resCreateProfile.getError().getLinks()[0].getHref());
@@ -281,13 +283,16 @@ function getProfile() {
 
 function monitor(){
 	optimalApiClient.CustomerServiceHandler(optimalApiClient).monitor(
-			function(error, response) {
-				console.log("Response at the client: " + JSON.stringify(response));
-				console.log("Response at the error: " + response.status);
+			function(error, responseDel) {
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				console.log("Response at the error: " + responseDel.status);
 			});
 }
 
 monitor();
+//createProfile();
+//createAddressInAProfile();
+//creatCardUsingProfileAndAddress();
 //for(var i =0;i<11;i++){
 //getProfile();
 //getCardDetails();

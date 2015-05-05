@@ -64,7 +64,7 @@ exports.cardpayment = function(req, res) {
 	merchantRefNumber = Math.random().toString(36).slice(2);
 	var json = req.query;
 	var billingDet = new optimalApiClient.BillingDetails();
-	var authrization = new optimalApiClient.Authorization();
+	var authorization = new optimalApiClient.Authorization();
 	var card = new optimalApiClient.Card();
 	var cardExp = new optimalApiClient.CardExpiry();
 	billingDet.setStreet("Carlos Pellegrini 551");
@@ -76,12 +76,12 @@ exports.cardpayment = function(req, res) {
 	cardExp.setMonth("09");
 	cardExp.setYear("2019");
 	card.setCardExpiry(cardExp);
-	authrization.setMerchantRefNum(merchantRefNumber);
-	authrization.setAmount("100");
-	authrization.setSettleWithAuth("false");
-	authrization.setCard(card);
-	authrization.setBillingDetails(billingDet);
-	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(authrization,
+	authorization.setMerchantRefNum(merchantRefNumber);
+	authorization.setAmount("100");
+	authorization.setSettleWithAuth("false");
+	authorization.setCard(card);
+	authorization.setBillingDetails(billingDet);
+	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(authorization,
 			function(error, response) {
 				if (error) {
 					res.send(JSON.stringify(error));
@@ -94,13 +94,13 @@ exports.cardpayment = function(req, res) {
 exports.cardCustomer = function(req, res) {
 	merchantRefNumber = Math.random().toString(36).slice(2);
 	var json = req.query;
-	var authrization = new optimalApiClient.Authorization();
+	var authorization = new optimalApiClient.Authorization();
 	var card = new optimalApiClient.Card();
 	card.setPaymentToken(json.paymentToken);
-	authrization.setMerchantRefNum(merchantRefNumber);
-	authrization.setAmount("12500");
-	authrization.setCard(card);
-	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(authrization,
+	authorization.setMerchantRefNum(merchantRefNumber);
+	authorization.setAmount("12500");
+	authorization.setCard(card);
+	optimalApiClient.cardServiceHandler(optimalApiClient).authorize(authorization,
 			function(error, response) {
 				if (error) {
 					res.send(JSON.stringify(error));

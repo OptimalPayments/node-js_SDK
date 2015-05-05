@@ -2,7 +2,7 @@
  * author: Anup W.
  */
 var optimalApiClient = require("../lib/OptimalApiClient");
-var config = require("../sample/config");
+var config = require("../sample_application/config");
 
 var merchantRefNumber = Math.random().toString(36).slice(2);
 var merchantCustNumber = Math.random().toString(36).slice(2);
