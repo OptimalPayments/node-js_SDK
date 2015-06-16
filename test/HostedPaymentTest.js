@@ -273,6 +273,13 @@ function processAnOrderWithHostedPage() {
 				}
 			});
 }
+function getOrderReport(){
+	optimalApiClient.HostedApiServiceHandler(optimalApiClient).getOrderReport(5,1,
+			function(error, response) {
+				console.log("Response at the client: " + JSON.stringify(response));
+				console.log("Response at the error: " + response);
+			});
+}
 function monitor(){
 	optimalApiClient.HostedApiServiceHandler(optimalApiClient).monitor(
 			function(error, responseDel) {
@@ -280,7 +287,7 @@ function monitor(){
 				console.log("Response at the error: " + responseDel.status);
 			});
 }
-monitor();
+getOrderReport();
 // started create an Order
 //processAReBill("27CIQ2LPJ9DCHWI1LB");
 //updateAReBillWithDueDate("27CIQ2IGWW6OZVC1LJ");

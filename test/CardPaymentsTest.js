@@ -444,6 +444,49 @@ function authWithPaymentTokenAndSettlement() {
 			});
 }
 
+function complexAuth() {
+		var billingDet = new optimalApiClient.BillingDetails();
+		var authentication = new optimalApiClient.Authentication();
+		var shippingDet = new optimalApiClient.ShippingDetails();
+		var authorization = new optimalApiClient.Authorization();
+		var card = new optimalApiClient.Card();
+		var cardExp = new optimalApiClient.CardExpiry();
+		var merchantRefNumber = Math.random().toString(36).slice(2);
+		billingDet.setStreet("Carlos Pellegrini 551");
+		billingDet.setCity("Buenos Aires");
+		billingDet.setState("Zulia");
+		billingDet.setCountry("IN");  // Use AR to perform Held auth
+		billingDet.setZip("411001");  // use C1009ABK
+		shippingDet.setCarrier("CAD");
+		shippingDet.setCity("Buenos Aires");
+		shippingDet.setState("CA");
+		shippingDet.setCountry("US");  // Use AR to perform Held auth
+		shippingDet.setZip("422011");
+		card.setCardNum("5191330000004415");
+		cardExp.setMonth("09");
+		cardExp.setYear("2019");
+		card.setCardExpiry(cardExp);
+		authentication.setEci("5");
+		authentication.setCavv("AAABCIEjYgAAAAAAlCNiENiWiV+=");
+		authentication.setXid("OU9rcTRCY1VJTFlDWTFESXFtTHU=");
+		authentication.setThreeDEnrollment("Y");
+		authentication.setThreeDResult("Y");
+		authentication.setSignatureStatus("Y");
+		authorization.setMerchantRefNum(merchantRefNumber);
+		authorization.setAmount("1200");
+		authorization.setSettleWithAuth("false");
+		authorization.setDupCheck("true");
+		authorization.setCard(card);
+		authorization.setBillingDetails(billingDet);
+		authorization.setShippingDetails(shippingDet);
+		authorization.setAuthentication(authentication);
+		
+		optimalApiClient.cardServiceHandler(optimalApiClient).authorize(
+				authorization, function(error, responseDel) {
+					console.log("Response at authorize the client: " + JSON.stringify(responseDel));
+				});
+	}
+
 function monitor(){
 	optimalApiClient.cardServiceHandler(optimalApiClient).monitor(
 			function(error, responseDel) {
@@ -452,9 +495,96 @@ function monitor(){
 			});
 }
 
-monitor();
-
-
+function verifyCardAndBillingDetails(){
+	var verification = new optimalApiClient.Verification();
+	var billingDet = new optimalApiClient.BillingDetails();
+	var shippingDet = new optimalApiClient.ShippingDetails();
+	var authorization = new optimalApiClient.Authorization();
+	var card = new optimalApiClient.Card();
+	var cardExp = new optimalApiClient.CardExpiry();
+	var merchantRefNumber = Math.random().toString(36).slice(2);
+	billingDet.setStreet("Carlos Pellegrini 551");
+	billingDet.setCity("Buenos Aires");
+	billingDet.setState("Zulia");
+	billingDet.setCountry("IN");  // Use AR to perform Held auth
+	billingDet.setZip("411001");  // use C1009ABK
+	card.setCardNum("5191330000004415");
+	cardExp.setMonth("09");
+	cardExp.setYear("2019");
+	card.setCardExpiry(cardExp);
+	//authorization.setId("b63371b1-e925-4eb8-b889-7152046592ba");
+	verification.setMerchantRefNum(merchantRefNumber);
+	verification.setDupCheck("true");
+	verification.setCard(card);
+	verification.setBillingDetails(billingDet);
+	optimalApiClient.cardServiceHandler(optimalApiClient).verify(verification,
+			function(error, responseDel) {
+		console.log("Response at the client: " + responseDel.getId());
+		console.log("Response at the client: " + typeof(responseDel));
+		console.log("Response at the client: " +  typeof(responseDel));
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getMerchantRefNum());
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				console.log("Response at the error: " + responseDel.status);
+			});
+}
+function verifyCardUsingPaymentToken(){
+	var verification = new optimalApiClient.Verification();
+	var card = new optimalApiClient.Card();
+	var merchantRefNumber = Math.random().toString(36).slice(2);
+	card.setPaymentToken("CdZTeC8xEE0uIK0");
+	verification.setMerchantRefNum(merchantRefNumber);
+	verification.setCard(card);
+	optimalApiClient.cardServiceHandler(optimalApiClient).verify(verification,
+			function(error, responseDel) {
+		console.log("Response at the client: " + responseDel.getId());
+		console.log("Response at the client: " + typeof(responseDel));
+		console.log("Response at the client: " +  typeof(responseDel));
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getMerchantRefNum());
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				console.log("Response at the error: " + responseDel.status);
+			});
+}
+function getVerificationById(){
+	var verification = new optimalApiClient.Verification();
+	verification.setId("47a6944b-c67d-4cf4-804d-d12847649192");
+	optimalApiClient.cardServiceHandler(optimalApiClient).getVerification(verification,
+			function(error, responseDel) {
+		console.log("Response at the client: " + responseDel.getId());
+		console.log("Response at the client: " + typeof(responseDel));
+		console.log("Response at the client: " +  typeof(responseDel));
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getMerchantRefNum());
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				console.log("Response at the error: " + responseDel.status);
+			});
+}
+function getVerificationByMerchantRef(){
+	var verification = new optimalApiClient.Verification();
+	var pagination = new optimalApiClient.Pagination();
+	verification.setMerchantRefNum("nzwvvnvf6n31h5mi");
+	optimalApiClient.cardServiceHandler(optimalApiClient).searchByMerchantRef(verification, pagination,
+			function(error, responseDel) {
+		console.log("Response at the client: " + responseDel.getVerifications()[0].getId());
+		/*console.log("Response at the client: " + typeof(responseDel));
+		console.log("Response at the client: " +  typeof(responseDel));
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getCard().getType());
+		console.log("Response at the client: " + responseDel.getMerchantRefNum());*/
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+				//console.log("Response at the error: " + responseDel.status);
+			});
+}
+//getVerificationByMerchantRef();
+//getVerificationById();
+//monitor();
+complexAuth();
+//verifyCardAndBillingDetails();
+//verifyCardUsingPaymentToken();
 //authWithCard();
 //refundASettlement("3e148eb3-a0ed-403e-ba42-24982a953858");
 //cancelASettlement("3e148eb3-a0ed-403e-ba42-24982a953858");
