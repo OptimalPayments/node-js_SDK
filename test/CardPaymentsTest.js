@@ -106,10 +106,10 @@ function getsettlementUsingMerchantRefNumber(merchantref) {
 	var settle = new optimalApiClient.Settlements();
 	settle.setMerchantRefNum(merchantref);
 	optimalApiClient.cardServiceHandler(optimalApiClient).searchByMerchantRef(
-			settle,
+			settle, undefined,
 			function(error, responseDel) {
-				console.log("Response at the client: " + responseDel);
-				if (responseDel.error !== undefined) {
+				console.log("Response at the client: " + JSON.stringify(responseDel));
+			/*	if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.getError().getMessage());
 					console.log("Error: "
 							+ responseDel.getError().getLinks()[0].getHref());
@@ -118,7 +118,7 @@ function getsettlementUsingMerchantRefNumber(merchantref) {
 					console.log("Status: " + responseDel.getSettlements().length);
 					console.log("Status: "
 							+ responseDel.getSettlements()[0].getLinks()[0].getRel());
-				}
+				}*/
 			});
 }
 // cancel a settlement
@@ -582,7 +582,8 @@ function getVerificationByMerchantRef(){
 //getVerificationByMerchantRef();
 //getVerificationById();
 //monitor();
-complexAuth();
+//complexAuth();
+getsettlementUsingMerchantRefNumber('abcrwew');
 //verifyCardAndBillingDetails();
 //verifyCardUsingPaymentToken();
 //authWithCard();

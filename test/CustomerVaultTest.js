@@ -30,6 +30,28 @@ function createProfile(i) {
 			});
 }
 
+//Create profile using Single use token
+function createProfileUsingSingleUseToken(i) {
+	var profile = new optimalApiClient.Profiles();
+	var card = new optimalApiClient.Card();
+	profile.setMerchantCustomerId(merchantRefNumber);
+	profile.setLocale("en_US");
+	profile.setFirstName("John");
+	profile.setLastName("Smith");
+	profile.setEmail("John@testdomain.com");
+	profile.setPhone("713-444-5555");
+	card.setSingleUseToken("abcdefg322d3223");
+	optimalApiClient.CustomerServiceHandler(optimalApiClient)
+			.createCustmerProfile(profile, function(error, resCreateProfile) {
+				console.log(resCreateProfile);
+				console.log(resCreateProfile.getId());
+				console.log(resCreateProfile.getPaymentToken());
+				// console.log(resCreateProfile.getError().getMessage());
+				// console.log(resCreateProfile.getError().getLinks()[0].getHref());
+				console.log(JSON.stringify(resCreateProfile));
+			});
+}
+
 function updateCardWithProfileAndBillingAddress() {
 	var profile1 = new optimalApiClient.Profiles();
 	var address = new optimalApiClient.Address();
@@ -148,6 +170,7 @@ function lookUpProfile(id) {
 	optimalApiClient.CustomerServiceHandler(optimalApiClient)
 			.lookUpProfileBySubComponent(
 					function(error, responseDel) {
+						console.log(JSON.stringify(responseDel));
 						if (responseDel.error !== undefined) {
 							console.log("Error: " + responseDel.error.message);
 						} else {
@@ -269,10 +292,10 @@ function updateProfile() {
 //get profile details
 function getProfile() {
 	var profile = new optimalApiClient.Profiles();
-	profile.setId("aa237581-2635-4b93-8b7e-01d60a59a5f4");
+	profile.setId("4a2c0aa9-313f-41d9-9ae3-31ec0177e850");
 	optimalApiClient.CustomerServiceHandler(optimalApiClient).getCustmerProfile(
 			profile, function(error, responseDel){
-				console.log("Response at the client: " + responseDel);
+				console.log("Response at the client: " + JSON.stringify(responseDel));
 				if (responseDel.error !== undefined) {
 					console.log("Error: " + responseDel.getError().getMessage());
 				} else {
@@ -289,7 +312,7 @@ function monitor(){
 			});
 }
 
-monitor();
+//getProfile();
 //createProfile();
 //createAddressInAProfile();
 //creatCardUsingProfileAndAddress();
@@ -299,5 +322,5 @@ monitor();
 //getAddressDetails();
 //updateCardWithProfileAndBillingAddress();
 //}
-//lookUpProfile("4f439497-cc95-4ddb-9c66-9a7b6758bfac");
+lookUpProfile("4a2c0aa9-313f-41d9-9ae3-31ec0177e850");
 //getAddressDetails();
